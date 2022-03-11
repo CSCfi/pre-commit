@@ -18,7 +18,7 @@ folder of each git repository it finds ($REPO/.git/hooks).
 ```bash deploy_pre-commit.sh -r <PATH_TO_YOUR_REPOS> -s pre-commit -m 1```
 
 ## Full usage of the installer:
-deploy_pre-commit.sh -r|--repositories-folder <REPOSITORIES_FOLDER> -s|--pre-commit-script <PRE_COMMIT_SCRIPT> [-m|--max-depth <MAX_DEPTH>] [-h|--help]
+```bash deploy_pre-commit.sh -r|--repositories-folder <REPOSITORIES_FOLDER> -s|--pre-commit-script <PRE_COMMIT_SCRIPT> [-m|--max-depth <MAX_DEPTH>] [-h|--help]```
 
 
 | Option | Description | Default value | Required/optional|
