@@ -135,3 +135,20 @@ if [ -n "${changed_json_files}" ]; then
     exit 1
   fi
 fi
+
+changed_puppet_files=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  xargs grep -lE '^#!/.*pp$'
+)
+
+if [ -n "${changed_puppet_files}" ]; then
+  print_msg yellow "Running puppet-lint..."
+  # shellcheck disable=SC2086
+  if puppet-lint $changed_puppet_files; then
+    print_msg green "puppet-lint approved your JSON files, nice"
+  else
+    print_msg red "puppet-lint disapproves of your changes (return code: $?), "\
+                  "fix the errors and come back later"
+    exit 1
+  fi
+fi

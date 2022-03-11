@@ -19,4 +19,4 @@ guess_installer() {
 }
 
 guess_installer
-sudo ${installer} yamllint pylint shellcheck jq
+sudo ${installer} yamllint pylint shellcheck jq puppet-lint

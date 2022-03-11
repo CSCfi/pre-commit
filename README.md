@@ -8,6 +8,7 @@ This repository contains a script to run as a git hook for your repositories
 - Python scripts (with Pylint)
 - YAML files (with yamllint)
 - JSON files (with jq)
+- Puppet files (with puppet-lint)
 
 # Installation
 The installer will copy the pre-commit hook into the corresponding
