@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+# Print a message
+#
+# Params:
+#   $1: colour (red | green | yellow)
+#   $*: status to print
+#
+# Example usage:
+#   print_msg green "Successfully built $something"
+#
+#   print_msg red "An error occurred:" $msg
+print_msg() {
+  color="1"
+  case $1 in
+    red)    color="31;1" ;;
+    green)  color="32;1" ;;
+    yellow) color="33;1" ;;
+  esac
+  shift
+  # shellcheck disable=SC1117
+  printf " \033[${color}m*\033[0;1m %s\033[0m\n" "$*"
+}
+
+
+# Guess the package manager of your system
+#
+installer=""
+guess_installer() {
+  if [ -z "${installer}" ]; then
+    if apt --version; then
+      installer='apt install'
+    elif yum --version; then
+      installer='yum install'
+    elif dnf --version; then
+      installer='dnf install'
+    elif pacman --version; then
+      installer='pacman -U'
+    elif snap --version; then
+      installer='snap install'
+    else
+      installer='<your-system-installer>'
+    fi
+  fi
+}
+
+# Require an application to be in $PATH.
+#
+# Params:
+#   $1: app name
+#
+# Example usage:
+#   require_app ruby
+require_app() {
+  while [ $# -gt 0 ]
+  do
+    if ! command -v "$1" > /dev/null; then
+      print_msg red "'$1' not found, please install it with: ${installer} ${1}"
+      return 1
+    fi
+    shift
+  done
+}
+
+guess_installer
+
+require_app shellcheck jq yamllint pylint || exit 0
+
+# ToDo: All of this share too much code...
+
+changed_shell_files=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  xargs grep -lE '^#!/.*(sh|bash|ksh)$'
+)
+
+if [ -n "${changed_shell_files}" ]; then
+  print_msg yellow "Running shellcheck..."
+  # shellcheck disable=SC2086
+  if shellcheck -a $changed_shell_files; then
+    print_msg green "shellcheck approved your shell scripts, nice"
+  else
+    print_msg red "shellcheck disapproves of your changes (return code: $?), "\
+                  "fix the errors and come back later"
+    exit 1
+  fi
+fi
+
+changed_yaml_files=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  xargs grep -lE '^#!/.*(yml|yaml)$'
+)
+
+if [ -n "${changed_yaml_files}" ]; then
+  print_msg yellow "Running yamllint..."
+  # shellcheck disable=SC2086
+  if yamllint $changed_yaml_files; then
+    print_msg green "yamllint approved your YAML files, nice"
+  else
+    print_msg red "yamllint disapproves of your changes (return code: $?), "\
+                  "fix the errors and come back later"
+    exit 1
+  fi
+fi
+
+changed_python_files=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  xargs grep -lE '^#!/.*py$'
+)
+
+if [ -n "${changed_python_files}" ]; then
+  print_msg yellow "Running pylint..."
+  # shellcheck disable=SC2086
+  if pylint -E $changed_python_files; then
+    print_msg green "pylint approved your Python files, nice"
+  else
+    print_msg red "pylint disapproves of your changes (return code: $?), "\
+                  "fix the errors and come back later"
+    exit 1
+  fi
+fi
+
+changed_json_files=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  xargs grep -lE '^#!/.*json$'
+)
+
+if [ -n "${changed_json_files}" ]; then
+  print_msg yellow "Running jq..."
+  # shellcheck disable=SC2086
+  if jq '.' $changed_json_files; then
+    print_msg green "jq approved your JSON files, nice"
+  else
+    print_msg red "jq disapproves of your changes (return code: $?), "\
+                  "fix the errors and come back later"
+    exit 1
+  fi
+fi
