@@ -49,27 +49,6 @@ if [ ! -x "${pre_commit_script}" ]; then
     echo "Set execution permission to pre-commit script '${pre_commit_script}' before deploying it."
     chmod +x "${pre_commit_script}"
 fi
-installer=""
-guess_installer() {
-  if [ -z "${installer}" ]; then
-    if apt --version; then
-      installer='apt install'
-    elif yum --version; then
-      installer='yum install'
-    elif dnf --version; then
-      installer='dnf install'
-    elif pacman --version; then
-      installer='pacman -U'
-    elif snap --version; then
-      installer='snap install'
-    else
-      installer='<your-system-installer>'
-    fi
-  fi
-}
-
-guess_installer
-${installer} yamllint pylint shellcheck jq
 
 while read -r directory
 do

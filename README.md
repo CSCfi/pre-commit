@@ -10,12 +10,17 @@ This repository contains a script to run as a git hook for your repositories
 - JSON files (with jq)
 
 # Installation
-The installer will try to take care of the dependecies, if it finds your package
-manager correctly. And then copy the pre-commit hook into the corresponding
+The installer will copy the pre-commit hook into the corresponding
 folder of each git repository it finds ($REPO/.git/hooks).
 
+1 Install required software:
+```bash
+sudo requirements.sh
+```
 1 Run:
-```bash deploy_pre-commit.sh -r <PATH_TO_YOUR_REPOS> -s pre-commit -m 1```
+```bash
+deploy_pre-commit.sh -r <PATH_TO_YOUR_REPOS> -s pre-commit -m 1
+```
 
 ## Full usage of the installer:
 ```bash deploy_pre-commit.sh -r|--repositories-folder <REPOSITORIES_FOLDER> -s|--pre-commit-script <PRE_COMMIT_SCRIPT> [-m|--max-depth <MAX_DEPTH>] [-h|--help]```
