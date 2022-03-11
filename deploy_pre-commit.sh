@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 function usage() {
-    echo "$(basename "${0}") -r|--repositories-folder <REPOSITORIES_FOLDER> -s|--pre-commit-script <PRE_COMMIT_SCRIPT> [-h|--help]"
+    echo "$(basename "${0}") -r|--repositories-folder <REPOSITORIES_FOLDER> -s|--pre-commit-script <PRE_COMMIT_SCRIPT> [-m|--max-depth <MAX_DEPTH>] [-h|--help]"
     echo ""
     echo "REPOSITORIES_FOLDER will be examine for git repositories and the pre-commit hook will be added to them."
     echo "PRE_COMMIT_SCRIPT it's a executable or script to run before commits"
+    echo "MAX_DEPTH is the depth level it will look for git repositories in the REPOSITORIES_FOLDER. Default is 3."
 }
 repositories_folder=""
 pre_commit_script=""
