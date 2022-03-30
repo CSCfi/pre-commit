@@ -152,3 +152,5 @@ if [ -n "${changed_puppet_files}" ]; then
     exit 1
   fi
 fi
+
+grep -E '#.*TODO' ../ ${changes} | grep -v '# TODO(.*)'
