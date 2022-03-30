@@ -64,7 +64,7 @@ require_app() {
 
 guess_installer
 
-require_app shellcheck jq yamllint pylint || exit 0
+require_app shellcheck jq yamllint pep8 || exit 0
 
 # ToDo: All of this share too much code...
 
@@ -108,12 +108,12 @@ changed_python_files=$(
 )
 
 if [ -n "${changed_python_files}" ]; then
-  print_msg yellow "Running pylint..."
+  print_msg yellow "Running pep8..."
   # shellcheck disable=SC2086
-  if pylint -E $changed_python_files; then
-    print_msg green "pylint approved your Python files, nice"
+  if pep8 $changed_python_files; then
+    print_msg green "pep8 approved your Python files, nice"
   else
-    print_msg red "pylint disapproves of your changes (return code: $?), "\
+    print_msg red "pep8 disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
     exit 1
   fi
