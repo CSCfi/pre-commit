@@ -66,7 +66,7 @@ guess_installer
 
 require_app shellcheck jq yamllint pep8 || exit 0
 
-# ToDo: All of this share too much code...
+# ToDo(adelgado): All of this share too much code...
 
 changed_shell_files=$(
   git diff --cached --name-only --diff-filter=ACM |
@@ -98,7 +98,7 @@ if [ -n "${changed_yaml_files}" ]; then
   else
     print_msg red "yamllint disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
-    exit 1
+    exit 2
   fi
 fi
 
@@ -115,7 +115,7 @@ if [ -n "${changed_python_files}" ]; then
   else
     print_msg red "flake8 disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
-    exit 1
+    exit 3
   fi
 fi
 
@@ -132,7 +132,7 @@ if [ -n "${changed_json_files}" ]; then
   else
     print_msg red "jq disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
-    exit 1
+    exit 4
   fi
 fi
 
@@ -149,15 +149,15 @@ if [ -n "${changed_puppet_files}" ]; then
   else
     print_msg red "puppet-lint disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
-    exit 1
+    exit 5
   fi
 fi
 
 changed_files=$(git diff --cached --name-only --diff-filter=ACM)
 if [ -n "${changed_files}" ]; then
-  wrong_todo=$(grep -E '#.*TODO' ../ ${changed_files} | grep -v '# TODO(.*)' | grep -v wrong_todo)
+  wrong_todo=$(grep -E '#.*TODO' ../ ${changed_files} | grep -iv '# TODO(.*)' | grep -v wrong_todo)
   if [ -n "${wrong_todo}" ]; then
     print_msg red "To-do's should have a responsible person and be written in the format '# TODO(name)' https://docs.openstack.org/hacking/latest/user/hacking.html"
-    exit 1
+    exit 6
   fi
 fi
