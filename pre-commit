@@ -155,9 +155,10 @@ fi
 
 changed_files=$(git diff --cached --name-only --diff-filter=ACM)
 if [ -n "${changed_files}" ]; then
+  # shellcheck disable=SC2086
   wrong_todo=$(grep -E '#.*TODO' ../ ${changed_files} | grep -iv '# TODO(.*)' | grep -v wrong_todo)
   if [ -n "${wrong_todo}" ]; then
     print_msg red "To-do's should have a responsible person and be written in the format '# TODO(name)' https://docs.openstack.org/hacking/latest/user/hacking.html"
-    exit 7
+    exit 6
   fi
 fi
