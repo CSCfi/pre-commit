@@ -108,12 +108,12 @@ changed_python_files=$(
 )
 
 if [ -n "${changed_python_files}" ]; then
-  print_msg yellow "Running pep8..."
+  print_msg yellow "Running flake8..."
   # shellcheck disable=SC2086
-  if pep8 $changed_python_files; then
-    print_msg green "pep8 approved your Python files, nice"
+  if flake8 $changed_python_files; then
+    print_msg green "flake8 approved your Python files, nice"
   else
-    print_msg red "pep8 disapproves of your changes (return code: $?), "\
+    print_msg red "flake8 disapproves of your changes (return code: $?), "\
                   "fix the errors and come back later"
     exit 1
   fi
