@@ -159,6 +159,7 @@ if [ -n "${changed_files}" ]; then
   wrong_todo=$(grep -E '#.*TODO' ../ ${changed_files} | grep -iv '# TODO(.*)' | grep -v wrong_todo)
   if [ -n "${wrong_todo}" ]; then
     print_msg red "To-do's should have a responsible person and be written in the format '# TODO(name)' https://docs.openstack.org/hacking/latest/user/hacking.html"
+    print_msg red "${wrong_todo}"
     exit 6
   fi
 fi
