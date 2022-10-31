@@ -64,7 +64,7 @@ require_app() {
 
 guess_installer
 
-require_app shellcheck jq yamllint pep8 || exit 0
+require_app shellcheck jq yamllint flake8 || exit 0
 
 # ToDo(adelgado): All of this share too much code...
 
